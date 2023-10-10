@@ -11,7 +11,7 @@
   synth.volume.value = 0 // volume in decibels
 
   const multiSynth = new Tone.PolySynth(Tone.Synth).toDestination()
-  multiSynth.volume.value = 0 // volume in decibels
+  multiSynth.volume.value = 2 // volume in decibels
   
   const notes = [
     'C4', 'E4', 'G4', // C major (4th octave)
@@ -19,19 +19,21 @@
   ]
   
   const sampler = new Tone.Sampler({
-      "C4":  "samples/1984.mp3",
+      // "C4":  "samples/1984.mp3",
       // "D#4": "samples/normOrSo.mp3",
-      "F#4": "samples/tucker.mp3",
-      // "A4":  "samples/Olimar.mp3",
+      // "F#4": "samples/tucker.mp3",
+      "C4":  "samples/Olimar.mp3",
   }).toDestination();
   sampler.volume.value = 0
 
   function play (time) {
+    Tone.start()
     const note1 = notes[counter]
     counter = (counter + 1) % notes.length // increase counter by 1
     const note2 = notes[counter]
     // synth.triggerAttackRelease(note, '8n', time)
-    sampler.triggerAttackRelease("C4", '1n', time);
+    // sampler.triggerAttackRelease("C4", '1n', time);
+    sampler.triggerAttackRelease("E4", '1n', time);
     // sampler.triggerAttackRelease("F#4", '4n', time);
     // sampler.triggerAttackRelease("F#4", '4n', time);
     // multiSynth.triggerAttackRelease(note1, '4n', time)
@@ -47,7 +49,7 @@
   }
 
   Tone.Transport.bpm.value = 60
-  Tone.Transport.scheduleRepeat(time => play(time), '1n')
+  Tone.Transport.scheduleRepeat(time => play(time), '4n')
 	nn.get('button').on('click', toggle)
 
 </script>

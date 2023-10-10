@@ -1,0 +1,44 @@
+<button>start/stop arpeggio</button>
+
+<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
+<script src="https://tonejs.github.io/build/Tone.js"></script>
+<script>
+  /* global nn, Tone */
+  
+  let counter = 0
+  
+  const synth = new Tone.Synth().toDestination()
+  synth.volume.value = 0 // volume in decibels
+
+  const multiSynth = new Tone.PolySynth(Tone.Synth).toDestination()
+  multiSynth.volume.value = 0 // volume in decibels
+  
+  const notes = [
+    'C4', 'E4', 'G4', // C major (4th octave)
+    'C5', 'E5', 'G5' // C major (5th octave)
+  ]
+  
+  function play (time) {
+    const note1 = notes[counter]
+    counter = (counter + 1) % notes.length // increase counter by 1
+    const note2 = notes[counter]
+    // synth.triggerAttackRelease(note, '8n', time)
+    multiSynth.triggerAttackRelease(note1, '8n', time)
+    multiSynth.triggerAttackRelease(note2, '8n', time + 0.25)
+  }
+  
+  function toggle () {
+    if (Tone.Transport.state === 'started') {
+      Tone.Transport.stop()
+    } else {
+      Tone.Transport.start()
+    }
+  }
+
+ 
+
+  Tone.Transport.bpm.value = 60
+  Tone.Transport.scheduleRepeat(time => play(time), '8n')
+	nn.get('button').on('click', toggle)
+
+</script>

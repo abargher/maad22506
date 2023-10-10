@@ -1,0 +1,24 @@
+<button>play</button>
+
+<!-- import netnet's helper library -->
+<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
+<!-- import the Tone.js library -->
+<script src="https://tonejs.github.io/build/Tone.js"></script>
+
+<script>
+/* global nn, Tone */
+const btn = document.querySelector('button')
+
+function play () {
+  // const notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4']
+  const notes = ['A4', 'B4', 'C#4', 'D4', 'E4', 'F#4', 'G#4']
+  const ranNote = nn.random(notes)
+  const synth = new Tone.Synth().toDestination()
+  synth.triggerAttackRelease(ranNote, '8n')
+  // synth.triggerAttackRelease('C4', '4n')
+  // nn.get('button').textContent = nn.randomInt(440, 880)
+}
+  
+btn.addEventListener('click', play)
+  
+</script>

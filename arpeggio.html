@@ -18,13 +18,24 @@
     'C5', 'E5', 'G5' // C major (5th octave)
   ]
   
+  const sampler = new Tone.Sampler({
+      "C4":  "samples/1984.mp3",
+      // "D#4": "samples/normOrSo.mp3",
+      "F#4": "samples/tucker.mp3",
+      // "A4":  "samples/Olimar.mp3",
+  }).toDestination();
+  sampler.volume.value = 0
+
   function play (time) {
     const note1 = notes[counter]
     counter = (counter + 1) % notes.length // increase counter by 1
     const note2 = notes[counter]
     // synth.triggerAttackRelease(note, '8n', time)
-    multiSynth.triggerAttackRelease(note1, '8n', time)
-    multiSynth.triggerAttackRelease(note2, '8n', time + 0.25)
+    sampler.triggerAttackRelease("C4", '1n', time);
+    // sampler.triggerAttackRelease("F#4", '4n', time);
+    // sampler.triggerAttackRelease("F#4", '4n', time);
+    // multiSynth.triggerAttackRelease(note1, '4n', time)
+    // multiSynth.triggerAttackRelease(note2, '4n', time + 0.25)
   }
   
   function toggle () {
@@ -35,10 +46,8 @@
     }
   }
 
- 
-
   Tone.Transport.bpm.value = 60
-  Tone.Transport.scheduleRepeat(time => play(time), '8n')
+  Tone.Transport.scheduleRepeat(time => play(time), '1n')
 	nn.get('button').on('click', toggle)
 
 </script>

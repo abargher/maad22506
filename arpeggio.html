@@ -41,6 +41,7 @@
   }
   
   function toggle () {
+    Tone.start()
     if (Tone.Transport.state === 'started') {
       Tone.Transport.stop()
     } else {

@@ -1,0 +1,61 @@
+<input placeholder="hello">
+
+<p></p>
+<input id="volumeSlide" type="range" min="-50" max="0" step="0.1" value="-12">
+<input id="pitchSlide" type="range" min="440" max="880" step="1" value="440">
+
+<p></p>
+
+<button id="clicker">click</button>
+<button id="toggle">toggle</button>
+<button id="holder">hold</button>
+
+<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
+<script src="https://tonejs.github.io/build/Tone.js"></script>
+<script>
+/* global nn, Tone */
+
+const freq1 = 440
+const freq2 = 500
+const multiSynth = new Tone.PolySynth().toDestination()
+let started = false
+
+function play () {
+  Tone.start()
+  multiSynth.triggerAttackRelease(freq2, '8n')
+}
+
+function startPlaying () {
+  multiSynth.triggerAttack(freq1)
+}
+
+function stopPlaying () {
+  multiSynth.triggerRelease(freq1)
+}
+
+function toggle (e) {
+  Tone.start()
+  if (!started) {
+    startPlaying()
+    started = true
+  } else {
+    stopPlaying()
+    started = false
+  }
+}
+
+function hello () {
+  window.alert("hiiii")
+}
+
+function sayStatus (event) {
+  console.log(event.target.value)
+}
+
+nn.get('#clicker').on('click', play)
+nn.get('#holder').on('mousedown', startPlaying)
+nn.get('#holder').on('mouseup', stopPlaying)
+nn.get('#toggle').on('click', toggle)
+nn.get('#volumeSlide').on('input', sayStatus)
+nn.get('#pitchSlide').on('input', sayStatus)
+</script>

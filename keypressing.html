@@ -1,0 +1,51 @@
+<!-- import libraries -->
+<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
+<script src="https://tonejs.github.io/build/Tone.js"></script>
+
+<script>
+/* global nn, Tone */
+
+// PolySynth (vs Synth) can trigger multiple notes at once
+const synth = new Tone.PolySynth().toDestination()
+Tone.setContext(new Tone.Context({ lookAhead : 0 }))
+
+// because this function is called by an event listener (below)
+// it gets passed an "event object" (e) with information
+// about that particular event.
+function play (e) {
+  // open the web console to see this log
+	console.log(e) 
+
+  if (e.key === 'a') {
+    synth.triggerAttackRelease('C4', '8n')
+  } else if (e.key === 'w') {
+    synth.triggerAttackRelease('C#4', '8n')
+  } else if (e.key === 's') {
+    synth.triggerAttackRelease('D4', '8n')
+  } else if (e.key === 'e') {
+    synth.triggerAttackRelease('D#4', '8n')
+  } else if (e.key === 'd') {
+    synth.triggerAttackRelease('E4', '8n')
+  } else if (e.key === 'f') {
+    synth.triggerAttackRelease('F4', '8n')
+  } else if (e.key === 't') {
+    synth.triggerAttackRelease('F#4', '8n')
+  } else if (e.key === 'g') {
+    synth.triggerAttackRelease('G4', '8n')
+  } else if (e.key === 'y') {
+    synth.triggerAttackRelease('G#4', '8n')
+  } else if (e.key === 'h') {
+    synth.triggerAttackRelease('A4', '8n')
+  } else if (e.key === 'u') {
+    synth.triggerAttackRelease('A#4', '8n')
+  } else if (e.key === 'j') {
+    synth.triggerAttackRelease('B4', '8n')
+  } else if (e.key === 'k') {
+    synth.triggerAttackRelease('C5', '8n')
+  }
+}
+
+// events listener (for the entire window)
+nn.on('keypress', play)
+
+</script>

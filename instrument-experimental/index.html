@@ -1,0 +1,72 @@
+<!-- <script src="experiment.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
+<script src="https://tonejs.github.io/build/Tone.js"></script>
+
+<h1>Hello, this is a gamepad tester</h1>
+
+<button id="startButton">start</button>
+<button id="stopButton">stop</button>
+
+<script>
+/* global nn, Tone */
+
+const gamepads = {};
+
+function gamepadHandler(event, connected) {
+  const gamepad = event.gamepad;
+  console.log(gamepad)
+  // Note:
+  // gamepad === navigator.getGamepads()[gamepad.index]
+  if (connected) {
+    gamepads[gamepad.index] = gamepad;
+  } else {
+    delete gamepads[gamepad.index];
+  }
+  console.log(gamepads)
+}
+
+window.addEventListener(
+  "gamepadconnected",
+  (e) => {
+    gamepadHandler(e, true);
+  },
+  false,
+);
+window.addEventListener(
+  "gamepaddisconnected",
+  (e) => {
+    gamepadHandler(e, false);
+  },
+  false,
+);
+// ========
+
+let pollingID = 0;
+
+function startPolling () {
+  pollingID = setInterval(() => {
+  const liveGamepads = navigator.getGamepads()
+  if (liveGamepads[0]) {
+    const gamepad = liveGamepads[0]
+    // Get the current state of the gamepad
+    const state = gamepad.axes;
+
+    console.log(state)
+    // Do something with the state
+    // ...
+  }
+}, 250);
+
+}
+
+
+function stopPolling () {
+  clearInterval(pollingID);
+}
+
+// Start polling the gamepad
+
+nn.get('#startButton').on('click', startPolling)
+nn.get('#stopButton').on('click', stopPolling)
+
+</script>

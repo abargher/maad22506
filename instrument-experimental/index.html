@@ -49,13 +49,28 @@ function startPolling () {
   if (liveGamepads[0]) {
     const gamepad = liveGamepads[0]
     // Get the current state of the gamepad
-    const state = gamepad.axes;
+    const allAxes = gamepad.axes;
 
-    console.log(state)
+    const button6Val = gamepad.buttons[6].value;  // Left trigger
+    const button7Val = gamepad.buttons[7].value;  // Right trigger
+
+    /* 
+    Axes array layout:
+    [LeftHoriz, LeftVert, RightHoriz, RightVert]
+
+    Stick values:
+        -1
+    -1   *   1
+         1
+    */
+
+    console.log(allAxes)
+    console.log(button6Val)  // Left trigger value
+    console.log(button7Val)  // Right trigger value
     // Do something with the state
     // ...
   }
-}, 250);
+}, 1);
 
 }
 

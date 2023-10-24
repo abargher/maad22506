@@ -2,11 +2,14 @@
 <script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
 <script src="https://tonejs.github.io/build/Tone.js"></script>
 
-<h1>Hello, this is a gamepad tester</h1>
+<h1>Hello. Press some buttons.</h1>
 
 <button id="startButton">start</button>
 <button id="stopButton">stop</button>
 <button id="enableTone">enable audio</button>
+<p>
+  <img id="khaled" src="../samples/dj-khaled-dancing.gif" style="opacity:0;">
+</p>
 
 <script>
 /* global nn, Tone */
@@ -45,10 +48,17 @@ window.addEventListener(
 
 /* Initialize sample players */
 const samplePaths = [
-  "../samples/1984.mp3",      // a
-  "../samples/normOrSo.mp3",  // b
-  "../samples/tucker.mp3",    // x
-  "../samples/Olimar.mp3"     // y
+  "../samples/1984.mp3",           // a
+  "../samples/normOrSo.mp3",       // b
+  "../samples/tucker.mp3",         // x
+  "../samples/Olimar.mp3",         // y
+  "../samples/but_then.mp3",       // LB
+  "../samples/what_is_a_dawg.mp3",  // RB
+  "../samples/silent.mp3",
+  "../samples/silent.mp3",
+  "../samples/this-is-called-what.mp3",
+  "../samples/perhaps-what-is-this.mp3",
+  "../samples/whole-ocean.mp3"
 ]
 
 let samplePlayers = []
@@ -71,9 +81,8 @@ const noteMap = [
 let pollingID = 0;
 
 function playSample (sampleID) {
-  const noteInd = sampleID % noteMap.length
   // sampler.triggerAttackRelease(notes[noteInd], 5)
-  samplePlayers[noteInd].start();
+  samplePlayers[sampleID].start();
   // synth.triggerAttackRelease([noteInd], '8n')
  }
 
@@ -101,12 +110,12 @@ function poll () {
     console.log(rightTrig)  // Right trigger value
 
     // Play samples on face button presses
-    for (let i = 0; i < 4; i++) {
-      // if (buttons[i].value == 1 && !buttonMap[i].pressed) {
+    for (let i = 0; i < samplePlayers.length; i++) {
       if (buttons[i].value == 1) {
         playSample(i)
       }
     }
+    document.getElementById("khaled").style.opacity = rightTrig
 
   }
 }

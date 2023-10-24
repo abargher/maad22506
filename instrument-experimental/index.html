@@ -43,22 +43,38 @@ window.addEventListener(
 );
 // ========
 
-const sampler = new Tone.Sampler({
-    "C4":  "../samples/1984.mp3",
-    "D#4": "../samples/normOrSo.mp3",
-    "F#4": "../samples/tucker.mp3",
-    "E4":  "../samples/Olimar.mp3",
-}).toDestination();
-sampler.volume.value = 2
+/* Initialize sample players */
+const samplePaths = [
+  "../samples/1984.mp3",      // a
+  "../samples/normOrSo.mp3",  // b
+  "../samples/tucker.mp3",    // x
+  "../samples/Olimar.mp3"     // y
+]
+
+let samplePlayers = []
+
+samplePaths.forEach((path) => {
+  samplePlayers.push(
+    new Tone.Player(path).toDestination()
+  )
+})
 
 const synth = new Tone.Synth().toDestination()
+
+const noteMap = [
+  {note: "C4", pressed: false},   // a
+  {note: "D#4", pressed: false},  // b
+  {note: "F#4", pressed: false},  // x
+  {note: "E4", pressed: false}    // y
+]
 
 let pollingID = 0;
 
 function playSample (sampleID) {
-  const notes = ["C4", "D#4", "F#4", "E4"]
-  const noteInd = sampleID % notes.length
-  sampler.triggerAttackRelease(notes[noteInd], 5)
+  const noteInd = sampleID % noteMap.length
+  // sampler.triggerAttackRelease(notes[noteInd], 5)
+  samplePlayers[noteInd].start();
+  // synth.triggerAttackRelease([noteInd], '8n')
  }
 
 function poll () {
@@ -86,6 +102,7 @@ function poll () {
 
     // Play samples on face button presses
     for (let i = 0; i < 4; i++) {
+      // if (buttons[i].value == 1 && !buttonMap[i].pressed) {
       if (buttons[i].value == 1) {
         playSample(i)
       }
@@ -95,7 +112,7 @@ function poll () {
 }
 
 function startPolling () {
-  pollingID = setInterval(poll, 150);  // call poll() ever millisecond
+  pollingID = setInterval(poll, 100);  // call poll() ever millisecond
 }
 
 function stopPolling () {

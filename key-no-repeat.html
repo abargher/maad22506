@@ -1,0 +1,49 @@
+<!-- import libraries -->
+<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
+<script src="https://tonejs.github.io/build/Tone.js"></script>
+
+<script>
+/* global nn, Tone */
+
+// PolySynth (vs Synth) can trigger multiple notes at once
+const synth = new Tone.PolySynth().toDestination()
+
+// this object (or "dictionary") keeps track of our key states
+const keyMap = {
+  a: { note: 'C4', pressed: false },
+  w: { note: 'C#4', pressed: false },
+  s: { note: 'D4', pressed: false },
+  e: { note: 'D#4', pressed: false },
+  d: { note: 'E4', pressed: false },
+  f: { note: 'F4', pressed: false },
+  t: { note: 'F#4', pressed: false },
+  g: { note: 'G4', pressed: false },
+  y: { note: 'G#4', pressed: false },
+  h: { note: 'A4', pressed: false },
+  u: { note: 'A#4', pressed: false },
+  j: { note: 'B4', pressed: false },
+  k: { note: 'C5', pressed: false }
+}
+
+
+function press (e) {  
+  const obj = keyMap[e.key]
+  if (obj && !obj.pressed) {
+    synth.triggerAttack(obj.note)
+    obj.pressed = true
+  }
+}
+  
+function release (e) {
+	const obj = keyMap[e.key]
+  if (obj && obj.pressed) {
+    synth.triggerRelease(obj.note)
+    obj.pressed = false
+  }
+}
+
+// events listeners
+nn.on('keydown', press)
+nn.on('keyup', release)
+
+</script>

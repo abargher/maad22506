@@ -6,6 +6,7 @@
 
 <button id="startButton">start</button>
 <button id="stopButton">stop</button>
+<button id="enableTone">enable audio</button>
 
 <script>
 /* global nn, Tone */
@@ -29,6 +30,7 @@ window.addEventListener(
   "gamepadconnected",
   (e) => {
     gamepadHandler(e, true);
+    Tone.start();
   },
   false,
 );
@@ -41,19 +43,33 @@ window.addEventListener(
 );
 // ========
 
+const sampler = new Tone.Sampler({
+    "C4":  "../samples/1984.mp3",
+    "D#4": "../samples/normOrSo.mp3",
+    "F#4": "../samples/tucker.mp3",
+    "E4":  "../samples/Olimar.mp3",
+}).toDestination();
+sampler.volume.value = 2
+
+const synth = new Tone.Synth().toDestination()
+
 let pollingID = 0;
 
-function startPolling () {
-  pollingID = setInterval(() => {
+function playSample (sampleID) {
+  const notes = ["C4", "D#4", "F#4", "E4"]
+  const noteInd = sampleID % notes.length
+  sampler.triggerAttackRelease(notes[noteInd], 5)
+ }
+
+function poll () {
   const liveGamepads = navigator.getGamepads()
   if (liveGamepads[0]) {
     const gamepad = liveGamepads[0]
-    // Get the current state of the gamepad
-    const allAxes = gamepad.axes;
 
-    const button6Val = gamepad.buttons[6].value;  // Left trigger
-    const button7Val = gamepad.buttons[7].value;  // Right trigger
-
+    const buttons = gamepad.buttons
+    const allAxes = gamepad.axes;  // Joystick axes
+    const leftTrig = gamepad.buttons[6].value;  // Left trigger
+    const rightTrig = gamepad.buttons[7].value;  // Right trigger
     /* 
     Axes array layout:
     [LeftHoriz, LeftVert, RightHoriz, RightVert]
@@ -65,23 +81,29 @@ function startPolling () {
     */
 
     console.log(allAxes)
-    console.log(button6Val)  // Left trigger value
-    console.log(button7Val)  // Right trigger value
-    // Do something with the state
-    // ...
-  }
-}, 1);
+    console.log(leftTrig)  // Left trigger value
+    console.log(rightTrig)  // Right trigger value
 
+    // Play samples on face button presses
+    for (let i = 0; i < 4; i++) {
+      if (buttons[i].value == 1) {
+        playSample(i)
+      }
+    }
+
+  }
 }
 
+function startPolling () {
+  pollingID = setInterval(poll, 150);  // call poll() ever millisecond
+}
 
 function stopPolling () {
   clearInterval(pollingID);
 }
 
-// Start polling the gamepad
-
 nn.get('#startButton').on('click', startPolling)
 nn.get('#stopButton').on('click', stopPolling)
+nn.get('#enableTone').on('click', () => {Tone.start();})
 
 </script>

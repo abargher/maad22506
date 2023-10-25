@@ -80,8 +80,14 @@ const noteMap = [
 
 let pollingID = 0;
 
-function playSample (sampleID) {
+function stopSample (sampleID) {
+  samplePlayers[sampleID].loop = false;
+  samplePlayers[sampleID].stop();
+}
+
+function playSample (sampleID, loop) {
   // sampler.triggerAttackRelease(notes[noteInd], 5)
+  samplePlayers[sampleID].loop = loop;
   samplePlayers[sampleID].start();
   // synth.triggerAttackRelease([noteInd], '8n')
  }
@@ -112,7 +118,11 @@ function poll () {
     // Play samples on face button presses
     for (let i = 0; i < samplePlayers.length; i++) {
       if (buttons[i].value == 1) {
-        playSample(i)
+        if (buttons[18].value == 1) {
+          stopSample(i);
+        } else {
+          playSample(i, buttons[17].value == 1)
+        }
       }
     }
     document.getElementById("khaled").style.opacity = rightTrig

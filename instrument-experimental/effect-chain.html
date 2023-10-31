@@ -1,0 +1,42 @@
+<!-- add an HTML buttons to our page -->
+<button id="clicker">click</button>
+
+<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
+<script src="https://tonejs.github.io/build/Tone.js"></script>
+
+<script>
+/* global nn, Tone */
+  
+const gain = new Tone.Gain(0.5).toDestination()
+
+const delay = new Tone.PingPongDelay({
+  wet: 0.5, 
+  delayTime: 0.15, 
+  feedback: 0.25
+})
+
+const reverb = new Tone.Reverb({
+  wet: 0.5, 
+  decay: 1.5
+})
+
+const wah = new Tone.AutoWah({
+  wet: 0.75, 
+  baseFrequency: 50	,	
+  octaves: 6,	
+  sensitivity: -30,
+  Q: 6
+})
+
+// more sounds available here: https://github.com/Tonejs/audio/tree/master
+// const file = 'https://tonejs.github.io/audio/berklee/gong_1.mp3'
+const file = "../samples/1984.mp3"
+const player = new Tone.Player(file).chain(delay, reverb, wah, gain)
+
+function play () {
+  player.start()
+}
+
+nn.get('#clicker').on('click', play)
+  
+</script>

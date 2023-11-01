@@ -92,8 +92,12 @@ function stopSample (sampleID) {
 
 function playSample (sampleID, loop) {
   // sampler.triggerAttackRelease(notes[noteInd], 5)
-  samplePlayers[sampleID].loop = loop;
-  samplePlayers[sampleID].start();
+  const player = samplePlayers[sampleID]
+  player.loop = loop;
+
+  if (player.state == "stopped") {
+    player.start();
+  }
   // synth.triggerAttackRelease([noteInd], '8n')
  }
 
@@ -125,6 +129,8 @@ function poll () {
     pitchShift.pitch = nn.map(allAxes[1], 1, -1, -3, 3)
     gain.gain.value = nn.map(allAxes[3], 1, -1, 0.2, 2)
     printf(pitchShift.pitch)
+    printf(gain.gain.value)
+
     // Play samples on face button presses
     for (let i = 0; i < samplePlayers.length; i++) {
       if (buttons[i].value == 1) {
@@ -140,7 +146,7 @@ function poll () {
 }
 
 function startPolling () {
-  pollingID = setInterval(poll, 100);  // call poll() every 100 milliseconds
+  pollingID = setInterval(poll, 1);  // call poll() every 100 milliseconds
 }
 
 function stopPolling () {

@@ -1,10 +1,18 @@
+// import * as nn from "https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js";
+// import * as Tone from "https://tonejs.github.io/build/Tone.js";
 /* global nn, Tone */
 
+const enableDebug = false;
 const gamepads = {};
 
+function printf (out) {
+  if (enableDebug) {
+    console.log(out)
+  }
+}
 function gamepadHandler(event, connected) {
   const gamepad = event.gamepad;
-  console.log(gamepad)
+  printf(gamepad)
   // Note:
   // gamepad === navigator.getGamepads()[gamepad.index]
   if (connected) {
@@ -12,7 +20,7 @@ function gamepadHandler(event, connected) {
   } else {
     delete gamepads[gamepad.index];
   }
-  console.log(gamepads)
+  printf(gamepads)
 }
 
 window.addEventListener(
@@ -31,6 +39,15 @@ window.addEventListener(
   false,
 );
 // ========
+
+/* Initialize effect(s) */
+
+const gain = new Tone.Gain(0.5).toDestination();
+
+const pitchShift = new Tone.PitchShift({
+  wet: 1,
+  pitch: 12
+});
 
 /* Initialize sample players */
 const samplePaths = [
@@ -51,10 +68,11 @@ let samplePlayers = []
 
 samplePaths.forEach((path) => {
   samplePlayers.push(
-    new Tone.Player(path).toDestination()
+    new Tone.Player(path).chain(pitchShift, gain)
   )
 })
 
+/*
 const synth = new Tone.Synth().toDestination()
 
 const noteMap = [
@@ -63,6 +81,7 @@ const noteMap = [
   {note: "F#4", pressed: false},  // x
   {note: "E4", pressed: false}    // y
 ]
+*/
 
 let pollingID = 0;
 
@@ -97,10 +116,15 @@ function poll () {
          1
     */
 
-    console.log(allAxes)
-    console.log(leftTrig)  // Left trigger value
-    console.log(rightTrig)  // Right trigger value
+    printf(allAxes)
+    printf(leftTrig)  // Left trigger value
+    printf(rightTrig)  // Right trigger value
 
+    document.getElementById("khaled").style.opacity = rightTrig
+    // pitchShift.pitch = nn.map(leftTrig, 0, 1, 0, 4)
+    pitchShift.pitch = nn.map(allAxes[1], 1, -1, -3, 3)
+    gain.gain.value = nn.map(allAxes[3], 1, -1, 0.2, 2)
+    printf(pitchShift.pitch)
     // Play samples on face button presses
     for (let i = 0; i < samplePlayers.length; i++) {
       if (buttons[i].value == 1) {
@@ -111,7 +135,6 @@ function poll () {
         }
       }
     }
-    document.getElementById("khaled").style.opacity = rightTrig
 
   }
 }

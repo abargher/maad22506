@@ -2,6 +2,7 @@
 // import * as Tone from "https://tonejs.github.io/build/Tone.js";
 /* global nn, Tone */
 
+
 const enableDebug = false;
 const gamepads = {};
 
@@ -71,6 +72,8 @@ samplePaths.forEach((path) => {
     new Tone.Player(path).chain(pitchShift, gain)
   )
 })
+const synth = new Tone.PolySynth().chain(pitchShift, gain)
+// const synth = new Tone.PolySynth().toDestination()
 
 /*
 const synth = new Tone.Synth().toDestination()
@@ -101,6 +104,12 @@ function playSample (sampleID, loop) {
   // synth.triggerAttackRelease([noteInd], '8n')
  }
 
+ const listener = new GamepadListener();
+
+ listener.on('gamepad:button', () => console.log("hello"));
+ 
+ listener.start();
+ 
 function poll () {
   const liveGamepads = navigator.getGamepads()
   if (liveGamepads[0]) {
@@ -146,13 +155,23 @@ function poll () {
 }
 
 function startPolling () {
-  pollingID = setInterval(poll, 1);  // call poll() every 100 milliseconds
+  pollingID = setInterval(poll, 1);  // call poll() every 1 milliseconds
 }
 
 function stopPolling () {
   clearInterval(pollingID);
 }
 
+
 nn.get('#startButton').on('click', startPolling)
 nn.get('#stopButton').on('click', stopPolling)
 nn.get('#enableTone').on('click', () => {Tone.start();})
+
+let scale_pattern = [2,2,3,2,3]  // Pentatonic scale degrees
+let root = 'A#3'
+let sequence = createSequence(root, scale_pattern)
+nn.get("#randomize").on("click", () => {randomizeSequence(root, scale_pattern)})
+nn.get("#play-pause").on("input", toggleScale)
+
+Tone.Transport.bpm.value = 90
+Tone.Transport.scheduleRepeat(time => play(time, synth), '16n')

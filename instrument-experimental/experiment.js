@@ -73,18 +73,6 @@ samplePaths.forEach((path) => {
   )
 })
 const synth = new Tone.PolySynth().chain(pitchShift, gain)
-// const synth = new Tone.PolySynth().toDestination()
-
-/*
-const synth = new Tone.Synth().toDestination()
-
-const noteMap = [
-  {note: "C4", pressed: false},   // a
-  {note: "D#4", pressed: false},  // b
-  {note: "F#4", pressed: false},  // x
-  {note: "E4", pressed: false}    // y
-]
-*/
 
 let pollingID = 0;
 
@@ -104,62 +92,99 @@ function playSample (sampleID, loop) {
   // synth.triggerAttackRelease([noteInd], '8n')
  }
 
- const listener = new GamepadListener();
+const listener = new GamepadListener();
 
- listener.on('gamepad:button', () => console.log("hello"));
- 
- listener.start();
- 
-function poll () {
-  const liveGamepads = navigator.getGamepads()
-  if (liveGamepads[0]) {
-    const gamepad = liveGamepads[0]
+listener.on('gamepad:connected', event => {
+  const {
+    index, // Gamepad index: Number [0-3].
+    gamepad, // Native Gamepad object.
+  } = event.detail;
+  console.log(index, gamepad)
+});
 
-    const buttons = gamepad.buttons
-    const allAxes = gamepad.axes;  // Joystick axes
-    const leftTrig = gamepad.buttons[6].value;  // Left trigger
-    const rightTrig = gamepad.buttons[7].value;  // Right trigger
-    /* 
-    Axes array layout:
-    [LeftHoriz, LeftVert, RightHoriz, RightVert]
-
-    Stick values:
-        -1
-    -1   0   1
-         1
-    */
-
-    printf(allAxes)
-    printf(leftTrig)  // Left trigger value
-    printf(rightTrig)  // Right trigger value
-
-    document.getElementById("khaled").style.opacity = rightTrig
-    // pitchShift.pitch = nn.map(leftTrig, 0, 1, 0, 4)
-    pitchShift.pitch = nn.map(allAxes[1], 1, -1, -3, 3)
-    gain.gain.value = nn.map(allAxes[3], 1, -1, 0.2, 2)
-    printf(pitchShift.pitch)
-    printf(gain.gain.value)
-
-    // Play samples on face button presses
-    for (let i = 0; i < samplePlayers.length; i++) {
-      if (buttons[i].value == 1) {
-        if (buttons[18].value == 1) {
-          stopSample(i);
-        } else {
-          playSample(i, buttons[17].value == 1)
-        }
-      }
-    }
-
-  }
+let controllerMap = {
+  buttons: [
+    {index:  0, pressed: false, value: 0},
+    {index:  1, pressed: false, value: 0},
+    {index:  2, pressed: false, value: 0},
+    {index:  3, pressed: false, value: 0},
+    {index:  4, pressed: false, value: 0},
+    {index:  5, pressed: false, value: 0},
+    {index:  6, pressed: false, value: 0},
+    {index:  7, pressed: false, value: 0},
+    {index:  8, pressed: false, value: 0},
+    {index:  9, pressed: false, value: 0},
+    {index: 10, pressed: false, value: 0},
+    {index: 11, pressed: false, value: 0},
+    {index: 12, pressed: false, value: 0},
+    {index: 13, pressed: false, value: 0},
+    {index: 14, pressed: false, value: 0},
+    {index: 15, pressed: false, value: 0},
+    {index: 16, pressed: false, value: 0},
+    {index: 17, pressed: false, value: 0},
+    {index: 18, pressed: false, value: 0}
+  ],
+  axes: [
+    {value: 0},
+    {value: 0},
+    {value: 0},
+    {value: 0}
+  ]
 }
+
+listener.on('gamepad:button', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  const sustain = controllerMap.buttons[18].pressed
+  if (pressed) {
+    printf(`you pressed button ${button}!`)
+    playSample(button, sustain)
+  }
+});
+
+/* 
+  Axes:
+    0: LHoriz
+    1: LVert
+    2: RHoriz
+    3: RVert
+*/
+listener.on('gamepad:0:axis:1', event => { 
+  const {
+      index,// Gamepad index: Number [0-3].
+      axis, // Axis index: Number [0-N].
+      value, // Current value: Number between -1 and 1. Float in analog mode, integer otherwise.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.axes[axis].value = value;
+  printf(`axis ${axis} value = ${value}`)
+  pitchShift.pitch = nn.map(value, 1, -1, -3, 3)
+});
+
+listener.on('gamepad:0:axis:3', event => { 
+  const {
+      index,// Gamepad index: Number [0-3].
+      axis, // Axis index: Number [0-N].
+      value, // Current value: Number between -1 and 1. Float in analog mode, integer otherwise.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.axes[axis].value = value;
+  printf(`axis ${axis} value = ${value}`)
+  gain.gain.value = nn.map(value, 1, -1, 0.2, 2)
+});
 
 function startPolling () {
-  pollingID = setInterval(poll, 1);  // call poll() every 1 milliseconds
+  listener.start()
 }
-
 function stopPolling () {
-  clearInterval(pollingID);
+  listener.stop();
 }
 
 

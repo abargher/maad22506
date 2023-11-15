@@ -39,4 +39,49 @@ function play () {
 
 nn.get('#clicker').on('click', play)
   
+function poll () {
+  const liveGamepads = navigator.getGamepads()
+  if (liveGamepads[0]) {
+    const gamepad = liveGamepads[0]
+
+    const buttons = gamepad.buttons
+    const allAxes = gamepad.axes;  // Joystick axes
+    const leftTrig = gamepad.buttons[6].value;  // Left trigger
+    const rightTrig = gamepad.buttons[7].value;  // Right trigger
+    /* 
+    Axes array layout:
+    [LeftHoriz, LeftVert, RightHoriz, RightVert]
+
+    Stick values:
+        -1
+    -1   0   1
+         1
+    */
+
+    printf(allAxes)
+    printf(leftTrig)  // Left trigger value
+    printf(rightTrig)  // Right trigger value
+
+    document.getElementById("khaled").style.opacity = rightTrig
+    // pitchShift.pitch = nn.map(leftTrig, 0, 1, 0, 4)
+    pitchShift.pitch = nn.map(allAxes[1], 1, -1, -3, 3)
+    gain.gain.value = nn.map(allAxes[3], 1, -1, 0.2, 2)
+    printf(pitchShift.pitch)
+    printf(gain.gain.value)
+
+    // Play samples on face button presses
+    for (let i = 0; i < samplePlayers.length; i++) {
+      if (buttons[i].value == 1) {
+        if (buttons[18].value == 1) {
+          stopSample(i);
+        } else {
+          playSample(i, buttons[17].value == 1)
+        }
+      }
+    }
+
+  }
+}
+
+
 </script>

@@ -3,7 +3,7 @@
 /* global nn, Tone */
 
 
-const enableDebug = false;
+const enableDebug = true;
 const gamepads = {};
 
 function printf (out) {
@@ -11,6 +11,7 @@ function printf (out) {
     console.log(out)
   }
 }
+
 function gamepadHandler(event, connected) {
   const gamepad = event.gamepad;
   printf(gamepad)

@@ -48,7 +48,7 @@ const gain = new Tone.Gain(0.5).toDestination();
 
 const pitchShift = new Tone.PitchShift({
   wet: 1,
-  pitch: 12
+  pitch: 0
 });
 
 /* Initialize sample players */
@@ -84,6 +84,10 @@ function stopSample (sampleID) {
 
 function playSample (sampleID, loop) {
   // sampler.triggerAttackRelease(notes[noteInd], 5)
+  if (sampleID >= samplePlayers.length) {
+    printf("no sample to play");
+    return;
+  }
   const player = samplePlayers[sampleID]
   player.loop = loop;
 
@@ -144,7 +148,7 @@ listener.on('gamepad:button', event => {
   controllerMap.buttons[button].pressed = pressed
   controllerMap.buttons[button].value = value
   const sustain = controllerMap.buttons[18].pressed
-  if (pressed) {
+  if (pressed && button != 18) {
     printf(`you pressed button ${button}!`)
     playSample(button, sustain)
   }
@@ -193,10 +197,11 @@ nn.get('#startButton').on('click', startPolling)
 nn.get('#stopButton').on('click', stopPolling)
 nn.get('#enableTone').on('click', () => {Tone.start();})
 
+// const noteCount = 128;  // Change this (allow input) to change melody length
 let scale_pattern = [2,2,3,2,3]  // Pentatonic scale degrees
 let root = 'A#3'
-let sequence = createSequence(root, scale_pattern)
-nn.get("#randomize").on("click", () => {randomizeSequence(root, scale_pattern)})
+let sequence = createSequence(root, scale_pattern, nn.get("#noteCount").value)
+nn.get("#randomize").on("click", () => {randomizeSequence(root, scale_pattern, nn.get("#noteCount").value)})
 nn.get("#play-pause").on("input", toggleScale)
 
 Tone.Transport.bpm.value = 90

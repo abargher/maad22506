@@ -20,10 +20,10 @@ const scaleState = {
   sequence: []
 }
 
-function createSequence (root, scale_pattern) {
+function createSequence (root, scale_pattern, noteCount) {
   const notes = createScale (root, scale_pattern)
   const lens = ['4n', '8n', '16n']  
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < noteCount; i++) {
     const obj = {}
     obj.note = nn.random(notes)
     obj.len = nn.random(lens)
@@ -33,10 +33,10 @@ function createSequence (root, scale_pattern) {
   console.log(scaleState.sequence)
 }
 
-function randomizeSequence (root, pattern) {
+function randomizeSequence (root, pattern, noteCount) {
   scaleState.sequence = [] // clear the last sequence
   if (Tone.Transport.state === 'started') Tone.Transport.stop()
-  createSequence(root, pattern)
+  createSequence(root, pattern, noteCount)
   if (nn.get('#play-pause').checked) Tone.Transport.start()
 }
 

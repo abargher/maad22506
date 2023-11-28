@@ -193,6 +193,7 @@ function stopPolling () {
 }
 
 
+/* Event listeners */
 nn.get('#startButton').on('click', startPolling)
 nn.get('#stopButton').on('click', stopPolling)
 nn.get('#enableTone').on('click', () => {Tone.start();})
@@ -203,6 +204,14 @@ let root = 'A#3'
 let sequence = createSequence(root, scale_pattern, nn.get("#noteCount").value)
 nn.get("#randomize").on("click", () => {randomizeSequence(root, scale_pattern, nn.get("#noteCount").value)})
 nn.get("#play-pause").on("input", toggleScale)
+nn.get("#tempo").on("input", () => {
+  let newTempo = nn.get("#tempo").value;
+  Tone.Transport.bpm.value = newTempo
+  printf(`tempo changed to ${newTempo}`)})
+nn.get("#tempoReset").on("click", () => {
+  nn.get("#tempo").value = 90;
+  Tone.Transport.bpm.value = 90;
+})
 
 Tone.Transport.bpm.value = 90
 Tone.Transport.scheduleRepeat(time => play(time, synth), '16n')

@@ -220,8 +220,9 @@ nn.get("#tempo").on("input", () => {
   printf(`tempo changed to ${newTempo}`)})
 
 nn.get("#tempoReset").on("click", () => {
-  Number(nn.get("#tempo").value) = defaultTempo;
+  nn.get("#tempo").value = defaultTempo;
   Tone.Transport.bpm.value = defaultTempo;
+  printf(`tempo reset to default value (${defaultTempo} bpm)`);
 })
 
 // volume controls

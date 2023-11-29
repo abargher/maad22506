@@ -20,6 +20,22 @@ const scaleState = {
   sequence: []
 }
 
+const keyMap = {
+  // maps key names to half-step offset values
+  "keyC"  : "C",
+  "keyG"  : "G",
+  "keyD"  : "D",
+  "keyA"  : "A",
+  "keyE"  : "E",
+  "keyB"  : "B",
+  "keyGb" : "F#",
+  "keyDb" : "C#",
+  "keyAb" : "G#",
+  "keyEb" : "D#",
+  "keyBb" : "A#",
+  "keyF"  : "F",
+}
+
 const lengthMap = {
   '2n': 1,
   '4n': 3,

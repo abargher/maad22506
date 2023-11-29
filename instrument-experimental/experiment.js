@@ -245,5 +245,11 @@ nn.get("#noteCountReset").on("click", () => {
   printf("melody length reset to default (16)");
 })
 
+// key select controls
+nn.get("#keys").on("input", () => {
+  let newKey = nn.get("#keys").value;
+  printf(`Now the key is ${newKey}`);
+})
+
 Tone.Transport.bpm.value = defaultTempo
 Tone.Transport.scheduleRepeat(time => play(time, synth), '16n')

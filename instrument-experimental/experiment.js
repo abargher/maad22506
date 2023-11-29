@@ -2,7 +2,13 @@
 // import * as Tone from "https://tonejs.github.io/build/Tone.js";
 /* global nn, Tone */
 
+/* Global constants */
+const defaultTempo = 90;
+const defaultNoteCount = 16;
+const defaultVolume = 0.5;  // expressed as a gain value
 
+/* Global variables */
+let baseVolume = defaultVolume;
 const enableDebug = true;
 const gamepads = {};
 
@@ -182,7 +188,9 @@ listener.on('gamepad:0:axis:3', event => {
   } = event.detail;
   controllerMap.axes[axis].value = value;
   printf(`axis ${axis} value = ${value}`)
-  gain.gain.value = nn.map(value, 1, -1, 0.2, 2)
+  printf(`base volume is ${baseVolume}`)
+  // gain.gain.value = baseVolume + nn.map(value, 1, -1, 0.2, 2)
+  gain.gain.value = baseVolume + nn.map(value, 1, -1, -0.8, 0.8)
 });
 
 function startPolling () {
@@ -204,14 +212,37 @@ let root = 'A#3'
 let sequence = createSequence(root, scale_pattern, nn.get("#noteCount").value)
 nn.get("#randomize").on("click", () => {randomizeSequence(root, scale_pattern, nn.get("#noteCount").value)})
 nn.get("#play-pause").on("input", toggleScale)
+
+// tempo controls
 nn.get("#tempo").on("input", () => {
-  let newTempo = nn.get("#tempo").value;
+  let newTempo = Number(nn.get("#tempo").value);
   Tone.Transport.bpm.value = newTempo
   printf(`tempo changed to ${newTempo}`)})
+
 nn.get("#tempoReset").on("click", () => {
-  nn.get("#tempo").value = 90;
-  Tone.Transport.bpm.value = 90;
+  Number(nn.get("#tempo").value) = defaultTempo;
+  Tone.Transport.bpm.value = defaultTempo;
 })
 
-Tone.Transport.bpm.value = 90
+// volume controls
+nn.get("#volume").on("input", () => {
+  let newVolume = Number(nn.get("#volume").value);
+  baseVolume = newVolume;
+  gain.gain.value = baseVolume;
+  printf(`volume set to ${newVolume}`);
+})
+
+nn.get("#volumeReset").on("click", () => {
+  gain.gain.value = defaultVolume
+  nn.get("#volume").value = defaultVolume
+  printf("volume reset to default")
+})
+
+// melody length controls
+nn.get("#noteCountReset").on("click", () => {
+  nn.get("#noteCount").value = defaultNoteCount;
+  printf("melody length reset to default (16)");
+})
+
+Tone.Transport.bpm.value = defaultTempo
 Tone.Transport.scheduleRepeat(time => play(time, synth), '16n')

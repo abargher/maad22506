@@ -15,7 +15,6 @@ const defaultVolume = 0.5;  // expressed as a gain value
 /* Global variables */
 let baseVolume = defaultVolume;
 const enableDebug = true;
-const gamepads = {};
 
 const effectState = {
   tempo : defaultTempo,
@@ -37,81 +36,6 @@ printf(synth.options.envelope)
 const defaultAttack = synth.options.envelope.attack;
 const defaultRelease = synth.options.envelope.release;
 const defaultDecay = synth.options.envelope.decay;
-
-function gamepadHandler(event, connected) {
-  const gamepad = event.gamepad;
-  printf(gamepad)
-  // Note:
-  // gamepad === navigator.getGamepads()[gamepad.index]
-  if (connected) {
-    gamepads[gamepad.index] = gamepad;
-  } else {
-    delete gamepads[gamepad.index];
-  }
-  printf(gamepads)
-}
-
-window.addEventListener(
-  "gamepadconnected",
-  (e) => {
-    gamepadHandler(e, true);
-    Tone.start();
-  },
-  false,
-);
-window.addEventListener(
-  "gamepaddisconnected",
-  (e) => {
-    gamepadHandler(e, false);
-  },
-  false,
-);
-// ========
-
-
-/* Initialize sample players */
-const samplePaths = [
-  "../samples/1984.mp3",           // a
-  "../samples/normOrSo.mp3",       // b
-  "../samples/tucker.mp3",         // x
-  "../samples/Olimar.mp3",         // y
-  "../samples/but_then.mp3",       // LB
-  "../samples/what_is_a_dawg.mp3",  // RB
-  "../samples/silent.mp3",
-  "../samples/silent.mp3",
-  "../samples/this-is-called-what.mp3",
-  "../samples/perhaps-what-is-this.mp3",
-  "../samples/whole-ocean.mp3"
-]
-
-let samplePlayers = []
-
-samplePaths.forEach((path) => {
-  samplePlayers.push(
-    new Tone.Player(path).chain(pitchShift, gain)
-  )
-})
-let pollingID = 0;
-
-function stopSample (sampleID) {
-  samplePlayers[sampleID].loop = false;
-  samplePlayers[sampleID].stop();
-}
-
-function playSample (sampleID, loop) {
-  // sampler.triggerAttackRelease(notes[noteInd], 5)
-  if (sampleID >= samplePlayers.length) {
-    printf("no sample to play");
-    return;
-  }
-  const player = samplePlayers[sampleID]
-  player.loop = loop;
-
-  if (player.state == "stopped") {
-    player.start();
-  }
-  // synth.triggerAttackRelease([noteInd], '8n')
-}
 
 const listener = new GamepadListener();
 
@@ -163,10 +87,8 @@ listener.on('gamepad:button', event => {
   } = event.detail;
   controllerMap.buttons[button].pressed = pressed
   controllerMap.buttons[button].value = value
-  const sustain = controllerMap.buttons[18].pressed
   if (pressed && button != 18) {
     printf(`you pressed button ${button}!`)
-    playSample(button, sustain)
   }
 });
 

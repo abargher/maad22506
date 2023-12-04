@@ -14,7 +14,6 @@ const keyMap = {
   "keyF"  : "F",
 }
 
-
 function createScale(key, pattern) {
   let root = keyMap[key] + nn.get("#octaves").value.slice(-1); 
   const scale = [root]
@@ -39,7 +38,6 @@ const scaleState = {
   sequence: []
 }
 
-
 /*  Create global note lengths */
 const lengthMap = {
   '2n': 1,
@@ -57,20 +55,6 @@ for (const [note, repeats] of Object.entries(lengthMap)) {
 function getRandomNoteLength() {
   return nn.random(noteLengths);
 }
-
-// function createSequence (root, scale_pattern, noteCount) {
-//   const notes = createScale (root, scale_pattern)
-//   // const lens = ['2n', '4n', '8n', '16n']
-//   for (let i = 0; i < noteCount; i++) {
-//     const obj = {}
-//     obj.note = nn.random(notes)
-//     // obj.len = nn.random(lens)
-//     obj.len = getRandomNoteLength()
-//     obj.play = nn.random() < 0.7
-//     scaleState.sequence.push(obj)
-//   }
-//   console.log(scaleState.sequence)
-// }
 
 function randomizeSequence (noteCount, arpeggChance) {
   scaleState.sequence = [] // clear the last sequence

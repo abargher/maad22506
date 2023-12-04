@@ -107,8 +107,15 @@ function generateMelody (noteCount, arpeggChance) {
   const melody = [];
   for (let i = 0; i < noteCount; i++){
     if (nn.random() < arpeggChance) {
+      let start = nn.randomInt(0, 7);
+      let octave = nn.randomInt(0, 1);
       for (let j = 0; j < 3; j++) {
-        melody.push(randomNote());
+        melody.push({
+          degree : (start + j) % 8,
+          octaveOffset : octave,
+          length : getRandomNoteLength(),
+          play : true,
+        });
       }
     } else {
       melody.push(randomNote());

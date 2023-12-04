@@ -1,4 +1,5 @@
-function createScale(root, pattern) {
+function createScale(key, pattern) {
+  let root = keyMap[key];
   const scale = [root]
   let note = root.slice(0, -1) // ex: 'C' from 'C4'
   let octave = parseInt(root.slice(-1)) // ex: 4 from 'C4'
@@ -55,7 +56,7 @@ function getRandomNoteLength() {
 
 function createSequence (root, scale_pattern, noteCount) {
   const notes = createScale (root, scale_pattern)
-  // const lens = ['2n', '4n', '8n', '16n']  
+  // const lens = ['2n', '4n', '8n', '16n']
   for (let i = 0; i < noteCount; i++) {
     const obj = {}
     obj.note = nn.random(notes)

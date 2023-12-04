@@ -40,7 +40,6 @@ const scaleState = {
 }
 
 
-
 /*  Create global note lengths */
 const lengthMap = {
   '2n': 1,

@@ -16,8 +16,7 @@ const keyMap = {
 
 
 function createScale(key, pattern) {
-  // let root = keyMap[key];
-  let root = key;
+  let root = keyMap[key] + nn.get("#octaves").value.slice(-1); 
   const scale = [root]
   let note = root.slice(0, -1) // ex: 'C' from 'C4'
   let octave = parseInt(root.slice(-1)) // ex: 4 from 'C4'
@@ -31,6 +30,7 @@ function createScale(key, pattern) {
     scale.push(note + octave)
   }
 
+  console.log(scale.length)
   return scale
 }
 
@@ -89,11 +89,21 @@ function toggleScale() {
   }
 }
 
-function play (time, instr) {
+// function play (time, instr) {
+//   const index = scaleState.step % scaleState.sequence.length
+//   const obj = scaleState.sequence[index]
+//   if (obj.play === true) {
+//    instr.triggerAttackRelease(obj.note, obj.len, time) 
+//   }
+//   scaleState.step++
+// }
+
+function play (time, instr, scale) {
   const index = scaleState.step % scaleState.sequence.length
-  const obj = scaleState.sequence[index]
-  if (obj.play === true) {
-   instr.triggerAttackRelease(obj.note, obj.len, time) 
+  const note = scaleState.sequence[index]
+  if (note.play) {
+    pitch = getNote(note.degree, note.octave, scale);
+    instr.triggerAttackRelease(pitch, note.duration, time);
   }
   scaleState.step++
 }
@@ -102,7 +112,7 @@ function randomNote() {
   return {
     degree : nn.randomInt(0, 7),  // scale degree = note played
     octaveOffset : nn.randomInt(0, 1),  // add to base octave
-    length : getRandomNoteLength(),  // e.g. '2n', '8n', etc
+    duration : getRandomNoteLength(),  // e.g. '2n', '8n', etc
     play : Boolean(nn.randomInt(0, 1)),  // is this a rest?
   };
 }
@@ -118,7 +128,7 @@ function generateMelody (noteCount, arpeggChance) {
         melody.push({
           degree : (start + j) % 8,
           octaveOffset : octave,
-          length : len,
+          duration : len,
           play : true,
         });
       }

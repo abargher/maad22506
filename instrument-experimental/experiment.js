@@ -24,6 +24,14 @@ const effectState = {
   pitch : 0,
 };
 
+/* Initialize effect(s) */
+
+const gain = new Tone.Gain(0.5).toDestination();
+
+const pitchShift = new Tone.PitchShift({
+  wet: 1,
+  pitch: 0
+});
 const synth = new Tone.PolySynth().chain(pitchShift, gain)
 printf(synth.options.envelope)
 const defaultAttack = synth.options.envelope.attack;
@@ -60,14 +68,6 @@ window.addEventListener(
 );
 // ========
 
-/* Initialize effect(s) */
-
-const gain = new Tone.Gain(0.5).toDestination();
-
-const pitchShift = new Tone.PitchShift({
-  wet: 1,
-  pitch: 0
-});
 
 /* Initialize sample players */
 const samplePaths = [
@@ -111,7 +111,7 @@ function playSample (sampleID, loop) {
     player.start();
   }
   // synth.triggerAttackRelease([noteInd], '8n')
- }
+}
 
 const listener = new GamepadListener();
 
@@ -170,14 +170,14 @@ listener.on('gamepad:button', event => {
   }
 });
 
-/* 
+/*
   Axes:
     0: LHoriz
     1: LVert
     2: RHoriz
     3: RVert
 */
-listener.on('gamepad:0:axis:1', event => { 
+listener.on('gamepad:0:axis:1', event => {
   const {
       index,// Gamepad index: Number [0-3].
       axis, // Axis index: Number [0-N].
@@ -189,7 +189,7 @@ listener.on('gamepad:0:axis:1', event => {
   pitchShift.pitch = nn.map(value, 1, -1, -3, 3)
 });
 
-listener.on('gamepad:0:axis:3', event => { 
+listener.on('gamepad:0:axis:3', event => {
   const {
       index,// Gamepad index: Number [0-3].
       axis, // Axis index: Number [0-N].
@@ -217,9 +217,8 @@ nn.get('#startButton').on('click', startPolling)
 nn.get('#stopButton').on('click', stopPolling)
 nn.get('#enableTone').on('click', () => {Tone.start();})
 
-// const noteCount = 128;  // Change this (allow input) to change melody length
 let scale_pattern = [2,2,3,2,3]  // Pentatonic scale degrees
-let root = 'A#3'
+let root = nn.get("#keys").value
 let sequence = createSequence(root, scale_pattern, nn.get("#noteCount").value)
 nn.get("#randomize").on("click", () => {
   randomizeSequence(root, scale_pattern, nn.get("#noteCount").value)

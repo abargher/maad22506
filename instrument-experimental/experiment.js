@@ -2,6 +2,11 @@
 // import * as Tone from "https://tonejs.github.io/build/Tone.js";
 /* global nn, Tone */
 
+function printf (out) {
+  if (enableDebug) {
+    console.log(out)
+  }
+}
 /* Global constants */
 const defaultTempo = 90;
 const defaultNoteCount = 16;
@@ -19,11 +24,11 @@ const effectState = {
   pitch : 0,
 };
 
-function printf (out) {
-  if (enableDebug) {
-    console.log(out)
-  }
-}
+const synth = new Tone.PolySynth().chain(pitchShift, gain)
+printf(synth.options.envelope)
+const defaultAttack = synth.options.envelope.attack;
+const defaultRelease = synth.options.envelope.release;
+const defaultDecay = synth.options.envelope.decay;
 
 function gamepadHandler(event, connected) {
   const gamepad = event.gamepad;
@@ -86,8 +91,6 @@ samplePaths.forEach((path) => {
     new Tone.Player(path).chain(pitchShift, gain)
   )
 })
-const synth = new Tone.PolySynth().chain(pitchShift, gain)
-
 let pollingID = 0;
 
 function stopSample (sampleID) {
@@ -208,6 +211,7 @@ function stopPolling () {
 }
 
 
+
 /* Event listeners */
 nn.get('#startButton').on('click', startPolling)
 nn.get('#stopButton').on('click', stopPolling)
@@ -217,8 +221,16 @@ nn.get('#enableTone').on('click', () => {Tone.start();})
 let scale_pattern = [2,2,3,2,3]  // Pentatonic scale degrees
 let root = 'A#3'
 let sequence = createSequence(root, scale_pattern, nn.get("#noteCount").value)
-nn.get("#randomize").on("click", () => {randomizeSequence(root, scale_pattern, nn.get("#noteCount").value)})
+nn.get("#randomize").on("click", () => {
+  randomizeSequence(root, scale_pattern, nn.get("#noteCount").value)
+});
+
 nn.get("#play-pause").on("input", toggleScale)
+
+const noteGlobals = {
+  key : keyMap[nn.get("#keys").value],
+  scale : createScale(keyMap[nn.get("#keys").value], scale_pattern),
+}
 
 // tempo controls
 nn.get("#tempo").on("input", () => {

@@ -1,5 +1,23 @@
+const keyMap = {
+  // maps key names to half-step offset values
+  "keyC"  : "C",
+  "keyG"  : "G",
+  "keyD"  : "D",
+  "keyA"  : "A",
+  "keyE"  : "E",
+  "keyB"  : "B",
+  "keyGb" : "F#",
+  "keyDb" : "C#",
+  "keyAb" : "G#",
+  "keyEb" : "D#",
+  "keyBb" : "A#",
+  "keyF"  : "F",
+}
+
+
 function createScale(key, pattern) {
-  let root = keyMap[key];
+  // let root = keyMap[key];
+  let root = key;
   const scale = [root]
   let note = root.slice(0, -1) // ex: 'C' from 'C4'
   let octave = parseInt(root.slice(-1)) // ex: 4 from 'C4'
@@ -21,21 +39,7 @@ const scaleState = {
   sequence: []
 }
 
-const keyMap = {
-  // maps key names to half-step offset values
-  "keyC"  : "C",
-  "keyG"  : "G",
-  "keyD"  : "D",
-  "keyA"  : "A",
-  "keyE"  : "E",
-  "keyB"  : "B",
-  "keyGb" : "F#",
-  "keyDb" : "C#",
-  "keyAb" : "G#",
-  "keyEb" : "D#",
-  "keyBb" : "A#",
-  "keyF"  : "F",
-}
+
 
 /*  Create global note lengths */
 const lengthMap = {
@@ -109,11 +113,12 @@ function generateMelody (noteCount, arpeggChance) {
     if (nn.random() < arpeggChance) {
       let start = nn.randomInt(0, 7);
       let octave = nn.randomInt(0, 1);
+      let len = getRandomNoteLength();
       for (let j = 0; j < 3; j++) {
         melody.push({
           degree : (start + j) % 8,
           octaveOffset : octave,
-          length : getRandomNoteLength(),
+          length : len,
           play : true,
         });
       }

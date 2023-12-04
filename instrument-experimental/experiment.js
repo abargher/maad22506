@@ -137,7 +137,6 @@ function stopPolling () {
 }
 
 
-
 /* Event listeners */
 nn.get('#startButton').on('click', startPolling)
 nn.get('#stopButton').on('click', stopPolling)

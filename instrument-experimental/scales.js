@@ -37,13 +37,14 @@ const keyMap = {
   "keyF"  : "F",
 }
 
+/*  Create global note lengths */
 const lengthMap = {
   '2n': 1,
   '4n': 3,
   '8n': 3,
   '16n': 3,
 }
-let noteLengths = []
+const noteLengths = []
 for (const [note, repeats] of Object.entries(lengthMap)) {
   for (let i = 0; i < repeats; i++) {
     noteLengths.push(note)
@@ -92,3 +93,28 @@ function play (time, instr) {
   }
   scaleState.step++
 }
+
+function randomNote() {
+  return {
+    degree : nn.randomInt(0, 7),  // scale degree = note played
+    octaveOffset : nn.randomInt(0, 1),  // add to base octave
+    length : getRandomNoteLength(),  // e.g. '2n', '8n', etc
+    play : Boolean(nn.randomInt(0, 1)),  // is this a rest?
+  };
+}
+
+function generateMelody (noteCount, arpeggChance) {
+  const melody = [];
+  for (let i = 0; i < noteCount; i++){
+    if (nn.random() < arpeggChance) {
+      for (let j = 0; j < 3; j++) {
+        melody.push(randomNote());
+      }
+    } else {
+      melody.push(randomNote());
+    }
+  }
+  return melody.slice(0, noteCount);
+}
+
+

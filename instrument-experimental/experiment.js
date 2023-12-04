@@ -12,6 +12,13 @@ let baseVolume = defaultVolume;
 const enableDebug = true;
 const gamepads = {};
 
+const effectState = {
+  tempo : defaultTempo,
+  reverb : 0,
+  volume : defaultVolume,
+  pitch : 0,
+};
+
 function printf (out) {
   if (enableDebug) {
     console.log(out)

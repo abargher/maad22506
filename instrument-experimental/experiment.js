@@ -11,6 +11,8 @@ function printf (out) {
 const defaultTempo = 90;
 const defaultNoteCount = 16;
 const defaultVolume = 0.5;  // expressed as a gain value
+const defaultArpegg = 0.1;
+let scale_pattern = [2,2,3,2,3]  // Pentatonic scale degrees
 
 /* Global variables */
 let baseVolume = defaultVolume;
@@ -21,6 +23,8 @@ const effectState = {
   reverb : 0,
   volume : defaultVolume,
   pitch : 0,
+  scale : createScale("keyC", scale_pattern),
+  arpegg : defaultArpegg,
 };
 
 /* Initialize effect(s) */
@@ -139,19 +143,15 @@ nn.get('#startButton').on('click', startPolling)
 nn.get('#stopButton').on('click', stopPolling)
 nn.get('#enableTone').on('click', () => {Tone.start();})
 
-let scale_pattern = [2,2,3,2,3]  // Pentatonic scale degrees
 let root = nn.get("#keys").value
-let sequence = createSequence(root, scale_pattern, nn.get("#noteCount").value)
+generateMelody(nn.get("#noteCount").value, nn.get("#arpegg").value)
+
 nn.get("#randomize").on("click", () => {
-  randomizeSequence(root, scale_pattern, nn.get("#noteCount").value)
+  randomizeSequence(nn.get("#noteCount").value, nn.get("#arpegg").value);
 });
 
 nn.get("#play-pause").on("input", toggleScale)
 
-const noteGlobals = {
-  key : keyMap[nn.get("#keys").value],
-  scale : createScale(keyMap[nn.get("#keys").value], scale_pattern),
-}
 
 // tempo controls
 nn.get("#tempo").on("input", () => {
@@ -185,11 +185,17 @@ nn.get("#noteCountReset").on("click", () => {
   printf("melody length reset to default (16)");
 })
 
+nn.get("#arpeggReset").on("click", () => {
+  nn.get("#arpegg").value = defaultArpegg;
+  printf(`arpeggio percentage reset to default (${defaultArpegg})`);
+})
+
 // key select controls
 nn.get("#keys").on("input", () => {
   let newKey = nn.get("#keys").value;
+  effectState.scale = createScale(newKey, scale_pattern)
   printf(`Now the key is ${newKey}`);
 })
 
 Tone.Transport.bpm.value = defaultTempo
-Tone.Transport.scheduleRepeat(time => play(time, synth), '16n')
+Tone.Transport.scheduleRepeat(time => play(time, synth, effectState.scale), '16n')

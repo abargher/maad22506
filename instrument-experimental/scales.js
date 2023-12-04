@@ -58,24 +58,24 @@ function getRandomNoteLength() {
   return nn.random(noteLengths);
 }
 
-function createSequence (root, scale_pattern, noteCount) {
-  const notes = createScale (root, scale_pattern)
-  // const lens = ['2n', '4n', '8n', '16n']
-  for (let i = 0; i < noteCount; i++) {
-    const obj = {}
-    obj.note = nn.random(notes)
-    // obj.len = nn.random(lens)
-    obj.len = getRandomNoteLength()
-    obj.play = nn.random() < 0.7
-    scaleState.sequence.push(obj)
-  }
-  console.log(scaleState.sequence)
-}
+// function createSequence (root, scale_pattern, noteCount) {
+//   const notes = createScale (root, scale_pattern)
+//   // const lens = ['2n', '4n', '8n', '16n']
+//   for (let i = 0; i < noteCount; i++) {
+//     const obj = {}
+//     obj.note = nn.random(notes)
+//     // obj.len = nn.random(lens)
+//     obj.len = getRandomNoteLength()
+//     obj.play = nn.random() < 0.7
+//     scaleState.sequence.push(obj)
+//   }
+//   console.log(scaleState.sequence)
+// }
 
-function randomizeSequence (root, pattern, noteCount) {
+function randomizeSequence (noteCount, arpeggChance) {
   scaleState.sequence = [] // clear the last sequence
   if (Tone.Transport.state === 'started') Tone.Transport.stop()
-  createSequence(root, pattern, noteCount)
+  generateMelody(noteCount, arpeggChance);
   if (nn.get('#play-pause').checked) Tone.Transport.start()
 }
 
@@ -88,20 +88,18 @@ function toggleScale() {
   }
 }
 
-// function play (time, instr) {
-//   const index = scaleState.step % scaleState.sequence.length
-//   const obj = scaleState.sequence[index]
-//   if (obj.play === true) {
-//    instr.triggerAttackRelease(obj.note, obj.len, time) 
-//   }
-//   scaleState.step++
-// }
+function getNote (degree, octaveOffset, scale) {
+  let note = scale[degree % scale.length]
+  let pitch = note.slice(0,-1);
+  let octave = parseInt(nn.get("#octaves").value.slice(-1)) + octaveOffset
+  return pitch + `${octave}`
+}
 
 function play (time, instr, scale) {
   const index = scaleState.step % scaleState.sequence.length
   const note = scaleState.sequence[index]
   if (note.play) {
-    pitch = getNote(note.degree, note.octave, scale);
+    pitch = getNote(note.degree, note.octaveOffset, scale);
     instr.triggerAttackRelease(pitch, note.duration, time);
   }
   scaleState.step++
@@ -135,7 +133,7 @@ function generateMelody (noteCount, arpeggChance) {
       melody.push(randomNote());
     }
   }
-  return melody.slice(0, noteCount);
+  scaleState.sequence = melody.slice(0, noteCount);
 }
 
 

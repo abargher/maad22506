@@ -29,7 +29,6 @@ function createScale(key, pattern) {
     scale.push(note + octave)
   }
 
-  console.log(scale.length)
   return scale
 }
 

@@ -21,7 +21,7 @@ let scale_pattern = [2,2,3,2,3]  // Pentatonic scale degrees
 
 /* Global variables */
 let baseVolume = defaultVolume;
-const enableDebug = true;
+const enableDebug = false;
 
 const effectState = {
   tempo : defaultTempo,
@@ -151,7 +151,19 @@ listener.on('gamepad:0:axis:2', event => {
   } = event.detail;
   controllerMap.axes[axis].value = value;
   printf(`axis ${axis} value = ${value}`)
-  // change articulation
+
+  synth.options.envelope.attack = nn.map(value, -1, 1, 0, 0.01)
+  synth.options.envelope.release = nn.map(value, -1, 1, 0.2, 1.8)
+  if (value < 0) {
+    synth.options.envelope.decay = nn.map(value, -1, 0, 0.01, 0.1)
+  } else if (value > 0) {
+    synth.options.envelope.decay = nn.map(value, 0, 1, 0.1, 1)
+  } else {
+    synth.options.envelope.attack = defaultAttack
+    synth.options.envelope.release = defaultRelease
+    synth.options.envelope.decay = defaultDecay
+  }
+  
 });
 
 listener.on('gamepad:0:axis:3', event => {
@@ -351,6 +363,44 @@ listener.on('gamepad:0:button:3', event => {
   }
 });
 
+function randomizeMelody() {
+  randomizeSequence(nn.get("#noteCount").value, nn.get("#arpegg").value);
+}
+
+// Select = randomize melody
+listener.on('gamepad:0:button:8', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (pressed) {
+    randomizeMelody();
+  }
+});
+
+// Start = play/pause
+listener.on('gamepad:0:button:9', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (pressed) {
+    toggleScale();
+    let currPlay = nn.get("#play-pause").checked
+    nn.get("#play-pause").checked = !currPlay
+  }
+});
+
 function startPolling () {
   listener.start()
 }
@@ -366,9 +416,7 @@ nn.get('#stopButton').on('click', stopPolling)
 let root = nn.get("#keys").value
 generateMelody(nn.get("#noteCount").value, nn.get("#arpegg").value)
 
-nn.get("#randomize").on("click", () => {
-  randomizeSequence(nn.get("#noteCount").value, nn.get("#arpegg").value);
-});
+nn.get("#randomize").on("click", randomizeMelody);
 
 nn.get("#play-pause").on("input", toggleScale)
 

@@ -9,6 +9,7 @@
 <div class="title">
 <h1>Melodies of Chance (interactive!)</h1>
 <h3>by: Alec Bargher</h3>
+<h4>Best experienced with a gamepad.</h4>
 </div>
 
 <div class="top-control">
@@ -55,7 +56,7 @@
   </select>
   </form>
   </div>
-</div><br>
+</div>
 
 <div class="sliders">
   <div class="sliders">
@@ -78,7 +79,30 @@
     <input class="slider" id="volume" type="range" value="0.5" min="0" max="2.5" step="0.05">
     <button id="volumeReset" class="button">reset volume</button>
   </div>
-</div>
+</div><br><br>
 
+<div class="controls-button">
+  <button id="toggleHelp" class="button">show controls help</button>
+</div>
+<div id="instructions" class="instructions" style="visibility: hidden;">
+  <h3>Controls: </h3>
+  <p>
+    <b>Start:</b> play/pause<br>
+    <b>Select:</b> randomize melody<br>
+    <b>Face buttons:</b> change key<br>
+    <b>D-Pad left/right:</b> change set of keys (affects face buttons)<br>
+    <b>D-pad up/down:</b> increase/decrease base octave<br><br>
+
+    <b>Right trigger:</b> increase tempo<br>
+    <b>Left trigger:</b> decrease tempo<br><br>
+
+    <b>Left stick vertical:</b> pitch shift<br>
+    <b>Left stick horizontal:</b> distortion<br><br>
+
+    <b>Right stick vertical:</b> volume shift<br>
+    <b>Right stick horizontal:</b> ping-pong delay<br>
+
+  </p>
+</div>
 
 <script type="module" src="experiment.js"></script>

@@ -453,6 +453,18 @@ nn.get("#keys").on("input", () => {
   printf(`Now the key is ${newKey}`);
 })
 
+nn.get("#toggleHelp").on("click", () => {
+  let visible = nn.get("#instructions").style.visibility
+  if (visible == 'hidden') {
+    nn.get("#toggleHelp").textContent = "hide controls help";
+    nn.get("#instructions").style.visibility = 'visible'
+  } else {
+    nn.get("#toggleHelp").textContent = "show controls help";
+    nn.get("#instructions").style.visibility = 'hidden'
+  }
+
+})
+
 nn.get("#keySets").on("input", updateKey)
 
 Tone.Transport.bpm.value = defaultTempo

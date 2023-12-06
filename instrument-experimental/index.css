@@ -9,6 +9,14 @@ html {
   font-family: sans-serif;
 }
 
+.instructions {
+  padding-left: 20px;
+  font-family: sans-serif;
+  margin: auto;
+  text-align :left;
+  width: 50%;
+}
+
 select {
   font-size: larger;
   font-family: sans-serif;
@@ -28,23 +36,30 @@ select {
 }
 
 .key-form {
+  padding-bottom: 40px;
   margin-right: 0;
   margin-left: auto;
   width: 50%;
 }
 .left-control {
+  padding-left: 70px;
+  float: left;
   margin-left : 0;
   margin-right: auto;
-  width: 50%
+  width: 50%;
 }
 
 .play-pause {
   margin: auto;
   padding-left: 20px;
-  accent-color: rgb(153, 255, 0);
+  accent-color: rgb(144, 73, 165);
   font-size: 30px;
   width: 40px;
   height: 40px;
+}
+.controls-button {
+  margin: auto;
+  width: 20%;
 }
 
 .slider {
@@ -59,6 +74,7 @@ select {
   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
   transition: opacity .2s;
 }
+
 .slider:hover {
   opacity: 1;
 }

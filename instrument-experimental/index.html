@@ -11,15 +11,37 @@
 </div>
 
 <div class="top-control">
+  <div class="play-pause">
+    <label for="play-pause" class="label">Play (Start)</label>
+    <input id="play-pause" class="play-pause" type="checkbox"><br>
+  </div>
   <div class="top-control">
     <button id="randomize" class="button">randomize melody</button>
   </div>
-  <div class="play-pause">
-    <label for="play-pause" class="label">Play</label>
-    <input id="play-pause" class="play-pause" type="checkbox"><br>
+</div><br><br>
+
+<div class="sliders">
+  <div class="sliders">
+    <label for="noteCount" class="label">melody length (on new melodies):</label><br>
+    <input class="slider" id="noteCount" type="range" value="16" min="16" max="256" step="8">
+    <button id="noteCountReset" class="button">reset melody length</button>
+  </div><br>
+  <div class="sliders">
+    <label for="arpegg" class="label">arpeggio quantity:</label><br>
+    <input class="slider" id="arpegg" type="range" value="0.1" min="0" max="0.9" step="0.05">
+    <button id="arpeggReset" class="button">reset arpeggios</button>
+  </div><br>
+  <div class="sliders">
+    <label for="tempo" class="label">base tempo:</label><br>
+    <input class="slider" id="tempo" type="range" value="90" min="50" max="200" step="1">
+    <button id="tempoReset" class="button">reset tempo</button>
+  </div><br>
+  <div class="sliders">
+    <label for="volume" class="label">base volume:</label><br>
+    <input class="slider" id="volume" type="range" value="0.5" min="0" max="2.5" step="0.05">
+    <button id="volumeReset" class="button">reset volume</button>
   </div>
 </div>
-
 
 <form>
 <label for="keys" class="label">Choose a key:</label>
@@ -53,28 +75,5 @@
   <option value="keySet2">3: D, B, Ab, F</option>
 </select>
 </form>
-
-<p>
-  <div>
-    <label for="noteCount" class="label">melody length (applies to new scales):</label><br>
-    <input id="noteCount" type="range" value="16" min="16" max="256" step="8">
-    <button id="noteCountReset" class="button">reset melody length</button>
-  </div><br>
-  <div>
-    <label for="arpegg" class="label">arpeggio quantity:</label><br>
-    <input id="arpegg" type="range" value="0.1" min="0" max="0.9" step="0.05">
-    <button id="arpeggReset" class="button">reset arpeggios</button>
-  </div><br>
-  <div>
-    <label for="tempo" class="label">base tempo:</label><br>
-    <input id="tempo" type="range" value="90" min="50" max="200" step="1">
-    <button id="tempoReset" class="button">reset tempo</button>
-  </div><br>
-  <div>
-    <label for="volume" class="label">base volume:</label><br>
-    <input id="volume" type="range" value="0.5" min="0" max="2.5" step="0.05">
-    <button id="volumeReset" class="button">reset volume</button>
-  </div>
-</p>
 
 <script type="module" src="experiment.js"></script>

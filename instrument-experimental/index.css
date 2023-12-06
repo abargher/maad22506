@@ -17,13 +17,50 @@ html {
 .top-control {
   margin: auto;
   width: 50%;
+}
 
+.slider {
+  border-radius: 8px;
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 50%; /* Full-width */
+  height: 25px; /* Specified height */
+  background: #707070; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 1; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  border-radius: 8px;
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #d66af7; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+  border-radius: 8px;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #d66af7; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.sliders {
+  padding-left: 100px;
+  margin: auto;
+  width: 80%
 }
 
 .play-pause {
   margin: auto;
-  padding-right: 10px;
+  padding-right: 20px;
   padding-top: 10px;
+  padding-bottom: 50px;
   accent-color: rgb(153, 255, 0);
   font-size: 30px;
   width: 40px;
@@ -31,7 +68,7 @@ html {
 }
 
 .button {
-  background-color: #d66af7; /* Green */
+  background-color: #d66af7;
   border: none;
   border-radius: 8px;
   color: white;

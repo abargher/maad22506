@@ -1,0 +1,133 @@
+html {
+  background-color: rgb(139, 204, 240);
+}
+
+.title {
+  margin: auto;
+  text-align: center;
+  padding-bottom: 20px;
+  font-family: sans-serif;
+}
+
+.credits {
+  margin: auto;
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 20px;
+  color: #1d1c1c;
+}
+.instructions {
+  padding-left: 20px;
+  font-family: sans-serif;
+  margin: auto;
+  text-align :left;
+  width: 50%;
+}
+
+select {
+  font-size: larger;
+  font-family: sans-serif;
+  background-color: #707070;
+  border-radius: 8px;
+  text-align: center;
+  color: #F0F0F0;
+}
+
+.label {
+  font-size: large;
+  font-family: sans-serif;
+  text-align: center;
+}
+.top-control {
+  margin: auto;
+}
+
+.key-form {
+  padding-bottom: 40px;
+  margin-right: 0;
+  margin-left: auto;
+  width: 50%;
+}
+.left-control {
+  padding-left: 80px;
+  float: left;
+  margin-left : 0;
+  margin-right: auto;
+  width: 50%;
+}
+
+.play-pause {
+  margin: auto;
+  padding-left: 20px;
+  accent-color: rgb(144, 73, 165);
+  font-size: 30px;
+  width: 40px;
+  height: 40px;
+}
+.controls-button {
+  margin: auto;
+  width: 20%;
+}
+
+.randomize {
+  margin: auto;
+  padding-left: 100px;
+}
+
+.slider {
+  border-radius: 8px;
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 50%; /* Full-width */
+  height: 25px; /* Specified height */
+  background: #707070; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  border-radius: 8px;
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #d66af7; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+  border-radius: 8px;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #d66af7; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.sliders {
+  padding-left: 100px;
+  margin: auto;
+  width: 80%
+}
+
+.button {
+  background-color: #d66af7;
+  border: none;
+  border-radius: 8px;
+  color: #F0F0F0;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+}
+.button:hover {
+  background-color: rgb(144, 73, 165);
+  color: white;
+}

@@ -1,0 +1,41 @@
+00: A
+01: B
+02: X
+03: Y
+04: LB
+05: RB
+06: LT
+07: RT
+08: Select (three dots)
+09: Start (three lines)
+10: L3 (click LS)
+11: R3 (click RS)
+12: Up
+13: Down
+14: Left
+15: Right
+16: Home (Stadia button)
+17: Google Assistant button
+18: Screenshot button
+
+const buttonMap = {
+  'a': 0,
+  'b': 1,
+  'x': 2,
+  'y': 3,
+  'lb': 4,
+  'rb': 5,
+  'lt': 6,
+  'rt': 7,
+  'select': 8, 
+  'start': 9,
+  'lClick': 10,
+  'rClick': 11,
+  'up': 12,
+  'down': 13,
+  'left': 14,
+  'right': 15,
+  'home': 16,
+  'asstn': 17,
+  'share': 18
+}

@@ -21,7 +21,8 @@ html {
   font-family: sans-serif;
   margin: auto;
   text-align :left;
-  width: 50%;
+  width: 20%;
+  position: relative;
 }
 
 select {
@@ -43,6 +44,7 @@ select {
 }
 
 .key-form {
+  position: relative;
   padding-bottom: 40px;
   margin-right: 0;
   margin-left: auto;
@@ -50,6 +52,7 @@ select {
 }
 .left-control {
   padding-left: 80px;
+  position: relative;
   float: left;
   margin-left : 0;
   margin-right: auto;
@@ -67,6 +70,8 @@ select {
 .controls-button {
   margin: auto;
   width: 20%;
+  position: relative;
+  padding-left: 80px;
 }
 
 .randomize {
@@ -112,9 +117,10 @@ select {
 }
 
 .sliders {
+  position: relative;
   padding-left: 100px;
   margin: auto;
-  width: 80%
+  width: 70%
 }
 
 .button {

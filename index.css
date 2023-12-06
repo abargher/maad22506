@@ -71,7 +71,8 @@ select {
 
 .randomize {
   margin: auto;
-  padding-left: 100px;
+  float: left;
+  padding-left: 80px;
 }
 
 .slider {

@@ -6,6 +6,7 @@ html {
   margin: auto;
   text-align: center;
   padding-bottom: 20px;
+  font-family: sans-serif;
 }
 
 .label {
@@ -13,8 +14,16 @@ html {
   font-family: sans-serif;
   text-align: center;
 }
+.top-control {
+  margin: auto;
+  width: 50%;
+
+}
+
 .play-pause {
   margin: auto;
+  padding-right: 10px;
+  padding-top: 10px;
   accent-color: rgb(153, 255, 0);
   font-size: 30px;
   width: 40px;

@@ -27,6 +27,28 @@ const effectState = {
   arpegg : defaultArpegg,
 };
 
+const keySets = [
+  { up    : "keyC",
+    right : "keyA",
+    down  : "keyGb",
+    left  : "keyEb"
+  },
+  { up    : "keyG",
+    right : "keyE",
+    down  : "keyDb",
+    left  : "keyBb"
+  },
+  { up    : "keyD",
+    right : "keyB",
+    down  : "keyAb",
+    left  : "keyF"
+  }
+]
+
+let currKeySet = {
+  
+}
+
 /* Initialize effect(s) */
 
 const gain = new Tone.Gain(0.5).toDestination();

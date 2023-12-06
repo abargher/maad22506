@@ -62,14 +62,16 @@ const pitchShift = new Tone.PitchShift({
 });
 
 const distort = new Tone.Distortion(0.0);
+const pingPong = new Tone.PingPongDelay("8n", 0.2);
 
-const synth = new Tone.PolySynth().chain(pitchShift, distort, gain)
+const synth = new Tone.PolySynth().chain(pitchShift, distort, pingPong, gain)
 printf(synth.options.envelope)
 const defaultAttack = synth.options.envelope.attack;
 const defaultRelease = synth.options.envelope.release;
 const defaultDecay = synth.options.envelope.decay;
 
 const listener = new GamepadListener();
+listener.start();
 
 listener.on('gamepad:connected', event => {
   const {
@@ -151,19 +153,7 @@ listener.on('gamepad:0:axis:2', event => {
   } = event.detail;
   controllerMap.axes[axis].value = value;
   printf(`axis ${axis} value = ${value}`)
-
-  synth.options.envelope.attack = nn.map(value, -1, 1, 0, 0.01)
-  synth.options.envelope.release = nn.map(value, -1, 1, 0.2, 1.8)
-  if (value < 0) {
-    synth.options.envelope.decay = nn.map(value, -1, 0, 0.01, 0.1)
-  } else if (value > 0) {
-    synth.options.envelope.decay = nn.map(value, 0, 1, 0.1, 1)
-  } else {
-    synth.options.envelope.attack = defaultAttack
-    synth.options.envelope.release = defaultRelease
-    synth.options.envelope.decay = defaultDecay
-  }
-  
+  pingPong.wet.value = nn.map(Math.abs(value), 0, 1, 0, 0.5)
 });
 
 listener.on('gamepad:0:axis:3', event => {

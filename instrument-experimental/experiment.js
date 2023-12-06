@@ -199,6 +199,41 @@ listener.on('gamepad:0:button:7', event => {
   }
 });
 
+// dpad Up, increase octave
+listener.on('gamepad:0:button:12', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (pressed && value == 1) {
+    let currOctave = Number (nn.get("#octaves").value.slice(-1))
+    let newOctave = "octave" + (Math.min(6, currOctave + 1))
+    nn.get("#octaves").value = newOctave
+  }
+});
+
+// dpad Down, decrease octave
+listener.on('gamepad:0:button:13', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (value == 1) {
+    let currOctave = Number (nn.get("#octaves").value.slice(-1))
+    let newOctave = "octave" + (Math.max(1, currOctave - 1))
+    nn.get("#octaves").value = newOctave
+  }
+});
 function startPolling () {
   listener.start()
 }

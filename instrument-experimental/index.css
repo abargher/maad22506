@@ -16,7 +16,26 @@ html {
 }
 .top-control {
   margin: auto;
+}
+
+.key-form {
+  margin-right: 0;
+  margin-left: auto;
   width: 50%;
+}
+.left-control {
+  margin-left : 0;
+  margin-right: auto;
+  width: 50%
+}
+
+.play-pause {
+  margin: auto;
+  padding-left: 20px;
+  accent-color: rgb(153, 255, 0);
+  font-size: 30px;
+  width: 40px;
+  height: 40px;
 }
 
 .slider {
@@ -54,17 +73,6 @@ html {
   padding-left: 100px;
   margin: auto;
   width: 80%
-}
-
-.play-pause {
-  margin: auto;
-  padding-right: 20px;
-  padding-top: 10px;
-  padding-bottom: 50px;
-  accent-color: rgb(153, 255, 0);
-  font-size: 30px;
-  width: 40px;
-  height: 40px;
 }
 
 .button {

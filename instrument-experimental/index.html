@@ -7,18 +7,55 @@
 <script>const { GamepadListener } = gamepad;</script>
 
 <div class="title">
-<h1 class="title">Melodies of Chance (interactive!)</h1>
+<h1>Melodies of Chance (interactive!)</h1>
+<h3>by: Alec Bargher</h3>
 </div>
 
 <div class="top-control">
-  <div class="play-pause">
-    <label for="play-pause" class="label">Play (Start)</label>
-    <input id="play-pause" class="play-pause" type="checkbox"><br>
+  <div class="left-control">
+    <div class="play-pause">
+      <label for="play-pause" class="label">Play (Start)</label>
+      <input id="play-pause" class="play-pause" type="checkbox">
+    </div>
+    <div class="randomize">
+      <button id="randomize" class="button">randomize melody</button>
+    </div>
   </div>
-  <div class="top-control">
-    <button id="randomize" class="button">randomize melody</button>
+  <div class="key-form">
+  <form>
+  <label for="keys" class="label">Choose a key:</label>
+  <select id="keys" name="Key select">
+    <option value="keyC" >C</option>
+    <option value="keyG" >G</option>
+    <option value="keyD" >D</option>
+    <option value="keyA" >A</option>
+    <option value="keyE" >E</option>
+    <option value="keyB" >B</option>
+    <option value="keyGb">G♭/F♯</option>
+    <option value="keyDb">D♭/C♯</option>
+    <option value="keyAb">A♭</option>
+    <option value="keyEb">E♭</option>
+    <option value="keyBb">B♭</option>
+    <option value="keyF" >F</option>
+  </select><br><br>
+  <label for="octaves" class="label">Choose a base octave:</label>
+  <select id="octaves" name="Octave select">
+    <option value="octave1">1</option>
+    <option value="octave2">2</option>
+    <option value="octave3" selected>3</option>
+    <option value="octave4">4</option>
+    <option value="octave5">5</option>
+    <option value="octave6">6</option>
+  </select><br><br>
+  <label for="keySets" class="label">Choose a set of keys:</label>
+  <select id="keySets" name="Key set select">
+    <option value="keySet0">1: C, A, Gb, Eb</option>
+    <option value="keySet1">2: G, E, Db, Bb</option>
+    <option value="keySet2">3: D, B, Ab, F</option>
+  </select>
+  </form>
   </div>
-</div><br><br>
+</div><br>
 
 <div class="sliders">
   <div class="sliders">
@@ -43,37 +80,5 @@
   </div>
 </div>
 
-<form>
-<label for="keys" class="label">Choose a key:</label>
-<select id="keys" name="Key select">
-  <option value="keyC" >C</option>
-  <option value="keyG" >G</option>
-  <option value="keyD" >D</option>
-  <option value="keyA" >A</option>
-  <option value="keyE" >E</option>
-  <option value="keyB" >B</option>
-  <option value="keyGb">G♭/F♯</option>
-  <option value="keyDb">D♭/C♯</option>
-  <option value="keyAb">A♭</option>
-  <option value="keyEb">E♭</option>
-  <option value="keyBb">B♭</option>
-  <option value="keyF" >F</option>
-</select><br><br>
-<label for="octaves" class="label">Choose a base octave:</label>
-<select id="octaves" name="Octave select">
-  <option value="octave1">1</option>
-  <option value="octave2">2</option>
-  <option value="octave3" selected>3</option>
-  <option value="octave4">4</option>
-  <option value="octave5">5</option>
-  <option value="octave6">6</option>
-</select><br><br>
-<label for="keySets" class="label">Choose a set of keys:</label>
-<select id="keySets" name="Key set select">
-  <option value="keySet0">1: C, A, Gb, Eb</option>
-  <option value="keySet1">2: G, E, Db, Bb</option>
-  <option value="keySet2">3: D, B, Ab, F</option>
-</select>
-</form>
 
 <script type="module" src="experiment.js"></script>

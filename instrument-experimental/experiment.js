@@ -7,6 +7,11 @@ function printf (out) {
     console.log(out)
   }
 }
+
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+
 /* Global constants */
 const defaultTempo = 90;
 const defaultNoteCount = 16;
@@ -46,7 +51,6 @@ const keySets = [
 ]
 
 let currKeySet = keySets[0];
-let currKey
 
 /* Initialize effect(s) */
 
@@ -210,7 +214,7 @@ listener.on('gamepad:0:button:12', event => {
   } = event.detail;
   controllerMap.buttons[button].pressed = pressed
   controllerMap.buttons[button].value = value
-  if (pressed && value == 1) {
+  if (pressed) {
     let currOctave = Number (nn.get("#octaves").value.slice(-1))
     let newOctave = "octave" + (Math.min(6, currOctave + 1))
     nn.get("#octaves").value = newOctave
@@ -228,12 +232,125 @@ listener.on('gamepad:0:button:13', event => {
   } = event.detail;
   controllerMap.buttons[button].pressed = pressed
   controllerMap.buttons[button].value = value
-  if (value == 1) {
+  if (pressed) {
     let currOctave = Number (nn.get("#octaves").value.slice(-1))
     let newOctave = "octave" + (Math.max(1, currOctave - 1))
     nn.get("#octaves").value = newOctave
   }
 });
+
+// dpad Left, cycle key set left
+listener.on('gamepad:0:button:14', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (pressed) {
+    let currSet = Number (nn.get("#keySets").value.slice(-1));
+    let newSet = mod((currSet - 1), 3)
+    printf(`old set: ${currSet} new set: ${newSet}`)
+    nn.get("#keySets").value = "keySet" + newSet
+    currKeySet = keySets[newSet]
+  }
+});
+
+// dpad Right, cycle key set right
+listener.on('gamepad:0:button:15', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (pressed) {
+    let currSet = Number (nn.get("#keySets").value.slice(-1));
+    let newSet = mod((currSet + 1), 3)
+    printf(`old set: ${currSet} new set: ${newSet}`)
+    nn.get("#keySets").value = "keySet" + newSet
+    currKeySet = keySets[newSet]
+  }
+});
+
+function updateKey() {
+  let newKey = nn.get("#keys").value;
+  effectState.scale = createScale(newKey, scale_pattern)
+  printf(`Now the key is ${newKey}`);
+}
+
+listener.on('gamepad:0:button:0', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (pressed) {
+    nn.get("#keys").value = currKeySet.down
+    updateKey();
+  }
+});
+
+listener.on('gamepad:0:button:1', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (pressed) {
+    nn.get("#keys").value = currKeySet.right
+    updateKey();
+  }
+});
+
+
+listener.on('gamepad:0:button:2', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (pressed) {
+    nn.get("#keys").value = currKeySet.left
+    updateKey();
+  }
+});
+
+
+listener.on('gamepad:0:button:3', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (pressed) {
+    nn.get("#keys").value = currKeySet.up
+    updateKey();
+  }
+});
+
 function startPolling () {
   listener.start()
 }
@@ -300,6 +417,8 @@ nn.get("#keys").on("input", () => {
   effectState.scale = createScale(newKey, scale_pattern)
   printf(`Now the key is ${newKey}`);
 })
+
+nn.get("#keySets").on("input", updateKey)
 
 Tone.Transport.bpm.value = defaultTempo
 Tone.Transport.scheduleRepeat(time => play(time, synth, effectState.scale), '16n')

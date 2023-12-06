@@ -400,9 +400,6 @@ function stopPolling () {
 
 
 /* Event listeners */
-nn.get('#startButton').on('click', startPolling)
-nn.get('#stopButton').on('click', stopPolling)
-
 let root = nn.get("#keys").value
 generateMelody(nn.get("#noteCount").value, nn.get("#arpegg").value)
 

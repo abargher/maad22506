@@ -79,6 +79,7 @@ listener.on('gamepad:connected', event => {
     gamepad, // Native Gamepad object.
   } = event.detail;
   console.log(index, gamepad)
+  Tone.start();
 });
 
 let controllerMap = {
@@ -405,7 +406,10 @@ generateMelody(nn.get("#noteCount").value, nn.get("#arpegg").value)
 
 nn.get("#randomize").on("click", randomizeMelody);
 
-nn.get("#play-pause").on("input", toggleScale)
+nn.get("#play-pause").on("input", () => {
+  toggleScale();
+  Tone.start();
+})
 
 
 // tempo controls

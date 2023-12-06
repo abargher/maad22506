@@ -45,9 +45,8 @@ const keySets = [
   }
 ]
 
-let currKeySet = {
-  
-}
+let currKeySet = keySets[0];
+let currKey
 
 /* Initialize effect(s) */
 
@@ -57,7 +56,10 @@ const pitchShift = new Tone.PitchShift({
   wet: 1,
   pitch: 0
 });
-const synth = new Tone.PolySynth().chain(pitchShift, gain)
+
+const distort = new Tone.Distortion(0.0);
+
+const synth = new Tone.PolySynth().chain(pitchShift, distort, gain)
 printf(synth.options.envelope)
 const defaultAttack = synth.options.envelope.attack;
 const defaultRelease = synth.options.envelope.release;
@@ -103,21 +105,6 @@ let controllerMap = {
   ]
 }
 
-listener.on('gamepad:button', event => {
-  const {
-      index,// Gamepad index: Number [0-3].
-      button, // Button index: Number [0-N].
-      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
-      pressed, // Native GamepadButton pressed value: Boolean.
-      gamepad, // Native Gamepad object
-  } = event.detail;
-  controllerMap.buttons[button].pressed = pressed
-  controllerMap.buttons[button].value = value
-  if (pressed && button != 18) {
-    printf(`you pressed button ${button}!`)
-  }
-});
-
 /*
   Axes:
     0: LHoriz
@@ -125,6 +112,20 @@ listener.on('gamepad:button', event => {
     2: RHoriz
     3: RVert
 */
+
+listener.on('gamepad:0:axis:0', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      axis, // Axis index: Number [0-N].
+      value, // Current value: Number between -1 and 1. Float in analog mode, integer otherwise.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.axes[axis].value = value;
+  printf(`axis ${axis} value = ${value}`)
+  // change distortion
+  distort.distortion = Math.abs(value/8)
+});
+
 listener.on('gamepad:0:axis:1', event => {
   const {
       index,// Gamepad index: Number [0-3].
@@ -137,6 +138,18 @@ listener.on('gamepad:0:axis:1', event => {
   pitchShift.pitch = nn.map(value, 1, -1, -3, 3)
 });
 
+listener.on('gamepad:0:axis:2', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      axis, // Axis index: Number [0-N].
+      value, // Current value: Number between -1 and 1. Float in analog mode, integer otherwise.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.axes[axis].value = value;
+  printf(`axis ${axis} value = ${value}`)
+  // change articulation
+});
+
 listener.on('gamepad:0:axis:3', event => {
   const {
       index,// Gamepad index: Number [0-3].
@@ -147,8 +160,43 @@ listener.on('gamepad:0:axis:3', event => {
   controllerMap.axes[axis].value = value;
   printf(`axis ${axis} value = ${value}`)
   printf(`base volume is ${baseVolume}`)
-  // gain.gain.value = baseVolume + nn.map(value, 1, -1, 0.2, 2)
   gain.gain.value = baseVolume + nn.map(value, 1, -1, -0.8, 0.8)
+});
+
+// Left trigger -- tempo down
+listener.on('gamepad:0:button:6', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (pressed) {
+    Tone.Transport.bpm.value = effectState.tempo - nn.map(value, 0, 1, 0, 30)
+  } else {
+    Tone.Transport.bpm.value = effectState.tempo
+  }
+});
+
+// Right trigger -- tempo up
+listener.on('gamepad:0:button:7', event => {
+  const {
+      index,// Gamepad index: Number [0-3].
+      button, // Button index: Number [0-N].
+      value, // Current value: Number between 0 and 1. Float in analog mode, integer otherwise.
+      pressed, // Native GamepadButton pressed value: Boolean.
+      gamepad, // Native Gamepad object
+  } = event.detail;
+  controllerMap.buttons[button].pressed = pressed
+  controllerMap.buttons[button].value = value
+  if (pressed) {
+    Tone.Transport.bpm.value = effectState.tempo + nn.map(value, 0, 1, 0, 30)
+  } else {
+    Tone.Transport.bpm.value = effectState.tempo
+  }
 });
 
 function startPolling () {
@@ -162,7 +210,6 @@ function stopPolling () {
 /* Event listeners */
 nn.get('#startButton').on('click', startPolling)
 nn.get('#stopButton').on('click', stopPolling)
-nn.get('#enableTone').on('click', () => {Tone.start();})
 
 let root = nn.get("#keys").value
 generateMelody(nn.get("#noteCount").value, nn.get("#arpegg").value)
@@ -178,6 +225,7 @@ nn.get("#play-pause").on("input", toggleScale)
 nn.get("#tempo").on("input", () => {
   let newTempo = Number(nn.get("#tempo").value);
   Tone.Transport.bpm.value = newTempo
+  effectState.tempo = newTempo
   printf(`tempo changed to ${newTempo}`)})
 
 nn.get("#tempoReset").on("click", () => {
